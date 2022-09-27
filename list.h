@@ -1,8 +1,8 @@
 // =================================================================
 //
 // File: list.h
-// Author:
-// Date:
+// Author: Damariz Licea C
+// Date:27/09/22
 // 
 // =================================================================
 #ifndef LIST_H
@@ -220,12 +220,26 @@ T List<T>::last() const {
 //
 // @returns the element in index
 // @throws IndexOutOfBounds, if index >= size.
+// @complexity O(n)
 // =================================================================
 template <class T>
 T List<T>::get(uint index) const {
-	T aux;
+	Node<T> *current = head;
+	int count{};
+	int aux=0;
+	if (index >= size){
+		throw IndexOutOfBounds();
+	}
+	while (current != nullptr){
+		if (count == index){
+			aux= current->value;
+			break;
+		}
+		count++;
+		current=current->next;
+	}
 
-	// TO DO
+
 	return aux;
 }
 
@@ -272,10 +286,30 @@ void List<T>::push_back(T val) {
 // was in that position is shifted to the right.
 //
 // @throws IndexOutOfBounds, if index > size.
+// @complexity O(n)
 // =================================================================
 template <class T>
 void List<T>::insert_at(T val, uint index) {
-	// TO DO
+	Node <T> *temp_node=new Node<T>(val), *new_node=head;
+	temp_node->next=nullptr;
+	if ((index<0) || (index>size)){
+		throw IndexOutOfBounds();
+	}
+	else if (index ==0){
+
+		return push_front(val);
+		//para que no se ejecute nada despues de este pedacito
+	}
+
+	for (size_t i{}; i<index-1;i++){
+		new_node=new_node->next;
+	
+	}
+	temp_node->next= new_node->next;
+		new_node->next= temp_node;
+		size++;
+
+
 }
 
 // =================================================================
@@ -343,12 +377,29 @@ T List<T>::pop_back() {
 //
 // @returns the element that was in index.
 // @throws IndexOutOfBounds, if index >= size.
+// @complexity O(n)
 // =================================================================
 template <class T>
 T List<T>::remove_at(uint index) {
 	T aux;
-	// TO DO
-	return aux;
+
+	if ((index<0) || (index>size)){
+		throw IndexOutOfBounds();
+	}
+
+	Node<T>*temp_node=head; //COPIA DE HEAD PQ NO PODIAS MOVER HEAD
+
+	if (index==0){
+		return pop_front();
+	}
+	for (size_t i{}; i< index-1 && temp_node != nullptr; i++ ){
+		temp_node= temp_node->next;
+	}
+	Node<T> *next_node=temp_node->next;
+	temp_node->next= next_node->next;
+	size--;
+
+	return next_node->value;
 }
 
 // =================================================================
@@ -359,7 +410,14 @@ T List<T>::remove_at(uint index) {
 // =================================================================
 template <class T>
 long int List<T>::indexOf(T val) const {
-	// TO DO
+	Node<T> *temp_node = head;
+	for (size_t i{}; i<size && temp_node != nullptr; i++){
+		if (temp_node-> value == val){
+			return i;
+		}
+		temp_node= temp_node->next;
+	}
+	
 	return -1;
 }
 
